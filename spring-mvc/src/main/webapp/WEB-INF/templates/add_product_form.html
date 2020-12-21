@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>New product</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<h2 class="display-4">Добавление товара</h2> <br>
+
+<form th:action="@{/products/add}" method="POST">
+    <input type="text" name="title" placeholder="Введите название товара"/> <br><br>
+    <input type="number" step="0.01" min="0.01" name="cost" placeholder="Введите стоимость товара"/> <br>
+    <button class="btn btn-light" type="submit">Подтвердить</button>
+</form>
+
+
+<button class="btn btn-light"><a style="text-decoration: none; color: black;"
+                                 th:href="@{/products}">Вернуться на главную</a></button>
+</body>
+</html>
