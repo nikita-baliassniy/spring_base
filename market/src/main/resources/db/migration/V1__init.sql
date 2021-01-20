@@ -1,8 +1,16 @@
 BEGIN;
 SET search_path TO hiber,public;
 DROP TABLE IF EXISTS products CASCADE;
-CREATE TABLE products (id bigserial PRIMARY KEY, title VARCHAR(255), cost numeric(6, 2));
-INSERT INTO products (title, cost) VALUES
+CREATE TABLE products (
+    id                  bigserial PRIMARY KEY,
+    title               VARCHAR(255),
+    cost                numeric(6, 2),
+    created_at          timestamp default current_timestamp,
+    updated_at          timestamp default current_timestamp
+);
+
+INSERT INTO products (title, cost)
+VALUES
 ('milk', 79.90),
 ('bread', 24.90),
 ('butter', 220.00),
