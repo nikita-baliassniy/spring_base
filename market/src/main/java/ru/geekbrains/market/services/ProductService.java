@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.geekbrains.market.dto.ProductDto;
 import ru.geekbrains.market.model.Product;
@@ -20,25 +21,12 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public Page<ProductDto> getAllProducts(Double minCost, Double maxCost, int page) {
-        Page<Product> out;
-        Pageable pageRequest = PageRequest.of(page - 1, 10);
-        if (minCost != null && maxCost != null) {
-            out = productRepository.findAllByCostBetween(minCost, maxCost, pageRequest);
-        } else if (minCost != null) {
-            out = productRepository.findAllByCostIsGreaterThan(minCost, pageRequest);
-        } else if (maxCost != null) {
-            out = productRepository.findAllByCostIsLessThan(maxCost, pageRequest);
-        } else {
-            out = productRepository.findAll(pageRequest);
-        }
-        return new PageImpl<>(out.getContent().stream().map(ProductDto::new)
-                .collect(Collectors.toList()));
+    public Optional<ProductDto> findProductById(Long id) {
+        return productRepository.findById(id).map(ProductDto::new);
     }
 
-    public ProductDto findById(Long id) {
-        Optional<Product> product = productRepository.findById(id);
-        return product.map(ProductDto::new).orElseGet(ProductDto::new);
+    public Page<ProductDto> findAll(Specification<Product> spec, int page, int pageSize) {
+        return productRepository.findAll(spec, PageRequest.of(page - 1, pageSize)).map(ProductDto::new);
     }
 
     public void deleteById(Long id) {
