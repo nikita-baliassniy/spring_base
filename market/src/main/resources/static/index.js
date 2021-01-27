@@ -6,8 +6,8 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             url: contextPath + '/products',
             method: 'GET',
             params: {
-                min_price: $scope.filter ? $scope.filter.min_price : null,
-                max_price: $scope.filter ? $scope.filter.max_price : null,
+                min_cost: $scope.filter ? $scope.filter.min_cost : null,
+                max_cost: $scope.filter ? $scope.filter.max_cost : null,
                 title: $scope.filter ? $scope.filter.title : null,
                 p: pageIndex
             }
@@ -24,6 +24,44 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             $scope.PaginationArray = $scope.generatePagesIndexes(minPageIndex, maxPageIndex)
         });
     };
+
+    $scope.showCart = function () {
+        $http({
+            url: contextPath + '/cart',
+            method: 'GET'
+        }).then(function (response) {
+            $scope.Cart = response.data;
+            console.log($scope.Cart);
+        });
+    };
+
+    $scope.addToCart = function (productId) {
+        $http.get(contextPath + '/cart/add/' + productId)
+            .then(function (response) {
+                $scope.showCart();
+            });
+    }
+
+    $scope.removeFromCart = function (productId) {
+        $http.get(contextPath + '/cart/remove/' + productId)
+            .then(function (response) {
+                $scope.showCart();
+            });
+    }
+
+    $scope.removeFromCartTotally = function (productId) {
+        $http.get(contextPath + '/cart/removeTotal/' + productId)
+            .then(function (response) {
+                $scope.showCart();
+            });
+    }
+
+    $scope.clearCart = function () {
+        $http.get(contextPath + '/cart/clear')
+            .then(function (response) {
+                $scope.showCart();
+            });
+    }
 
     $scope.generatePagesIndexes = function (startPage, endPage) {
         let arr = [];
@@ -49,6 +87,6 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
     }
 
     $scope.fillTable();
-
+    $scope.showCart();
 })
 ;

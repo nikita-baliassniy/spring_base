@@ -21,8 +21,12 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public Optional<ProductDto> findProductById(Long id) {
+    public Optional<ProductDto> findProductDtoById(Long id) {
         return productRepository.findById(id).map(ProductDto::new);
+    }
+
+    public Optional<Product> findProductById(Long id) {
+        return productRepository.findById(id);
     }
 
     public Page<ProductDto> findAll(Specification<Product> spec, int page, int pageSize) {
