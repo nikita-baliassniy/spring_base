@@ -31,4 +31,13 @@ VALUES
 ('box', 220.00),
 ('bag', 310.45),
 ('pen', 65.05);
+
+CREATE TABLE order_items (
+    id                      bigserial PRIMARY KEY,
+    title                   varchar(255),
+    quantity                int,
+    cost_per_item           numeric(6, 2),
+    cost                    numeric(6, 2)
+);
+
 COMMIT;
