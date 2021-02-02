@@ -3,8 +3,11 @@ package ru.geekbrains.market.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.market.dto.ProductDto;
+import ru.geekbrains.market.exceptions_handling.ResourceNotFoundException;
+import ru.geekbrains.market.repositories.specifications.ProductSpecifications;
 import ru.geekbrains.market.services.ProductService;
 
 @RestController
@@ -15,18 +18,17 @@ public class ProductController {
 
     // http://localhost:8189/market/products?min_cost=30&max_cost=400
     @GetMapping
-    public Page<ProductDto> getAllProducts(@RequestParam(defaultValue = "0", name = "min_cost") Double minCost,
-                                           @RequestParam(required = false, name = "max_cost") Double maxCost,
+    public Page<ProductDto> getAllProducts(@RequestParam MultiValueMap<String, String> params,
                                            @RequestParam(name = "p", defaultValue = "1") Integer page) {
         if (page < 1) {
             page = 1;
         }
-        return productService.getAllProducts(minCost, maxCost, page);
+        return productService.findAll(ProductSpecifications.build(params), page, 5);
     }
 
     @GetMapping("/{id}")
     public ProductDto getProductById(@PathVariable Long id) {
-        return productService.findById(id);
+        return productService.findProductDtoById(id).orElseThrow(() -> new ResourceNotFoundException("Product with id: " + id + " doens't exist"));
     }
 
     @DeleteMapping("/{id}")
